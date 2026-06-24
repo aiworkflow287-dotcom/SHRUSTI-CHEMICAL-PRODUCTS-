@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport="content-width=device-width, initial-scale=1.0">
+    <title>Shrusti Chemical Products | Professional Cleaning Solutions</title>
+    <style>
+        :root {
+            --primary: #232f3e; /* Amazon-like dark blue */
+            --secondary: #febd69; /* Amazon-like orange */
+            --light: #f3f3f3;
+            --dark: #111;
+            --text: #333;
+            --white: #fff;
+            --danger: #d00;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light);
+            color: var(--text);
+        }
+
+        /* Header */
+        header {
+            background-color: var(--primary);
+            color: var(--white);
+            padding: 1rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--white);
+            text-decoration: none;
+        }
+
+        .cart-icon {
+            position: relative;
+            cursor: pointer;
+            padding: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 4px;
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--danger);
+            color: white;
+            border-radius: 50%;
+            padding: 2px 6px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(to right, #232f3e, #37475a);
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.8;
+        }
+
+        /* Main Content */
+        .container {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .category-nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 2rem;
+            justify-content: center;
+        }
+
+        .category-btn {
+            background: white;
+            border: 1px solid #ddd;
+            padding: 10px 20px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .category-btn:hover, .category-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        /* Product Card */
+        .product-card {
+            background: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background-color: #eee;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #888;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        /* This is where you put your img tag later */
+        .product-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none; /* Hidden until you add real images */
+        }
+
+        .product-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .product-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--dark);
+            margin-bottom: 15px;
+        }
+
+        .add-to-cart {
+            margin-top: auto;
+            background: var(--secondary);
+            border: 1px solid #a88734;
+            padding: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.2s;
+        }
+
+        .add-to-cart:hover {
+            background: #f9a900;
+        }
+
+        /* Cart Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 2000;
+            justify-content: flex-end;
+        }
+
+        .modal-content {
+            background: white;
+            width: 100%;
+            max-width: 500px;
+            height: 100%;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 10px;
+        }
+
+        .close-btn {
+            font-size: 1.5rem;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .cart-items {
+            flex-grow: 1;
+        }
+
+        .cart-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+
+        .remove-btn {
+            color: var(--danger);
+            cursor: pointer;
+            font-weight: bold;
+            background: none;
+            border: none;
+        }
+
+        .checkout-form {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid #eee;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .form-group input, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .checkout-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px;
+            width: 100%;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+
+        /* Footer */
+        footer {
+            background: var(--primary);
+            color: white;
+            padding: 3rem 1rem;
+            margin-top: 3rem;
+        }
+
+        .footer-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .footer-section h3 {
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+
+        .contact-info p {
+            margin-bottom: 0.5rem;
+        }
+
+        @media (max-width: 768px) {
+            .nav-container {
+                flex-direction: column;
+                gap: 10px;
+            }
+            .products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" class="logo">SHRUSTI CHEMICAL PRODUCTS</a>
+            <div class="cart-icon" onclick="openCart()">
+                🛒 Cart
+                <span class="cart-count" id="cartCount">0</span>
+            </div>
+        </div>
+    </header>
+
+    <div class="hero">
+        <h1>Professional Cleaning & Industrial Supplies</h1>
+        <p>Wholesale distributor of mops, brushes, chemicals, and hygiene products. Bulk orders only.</p>
+    </div>
+
+    <div class="container">
+        <div class="category-nav" id="categoryNav">
+            <!-- Categories will be generated by JS -->
+        </div>
+
+        <div class="products-grid" id="productsGrid">
+            <!-- Products will be generated by JS -->
+        </div>
+    </div>
+
+    <!-- Cart Modal -->
+    <div class="modal" id="cartModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Your Order Request</div>
+                <button class="close-btn" onclick="closeCart()">&times;</button>
+            </div>
+            <div class="cart-items" id="cartItems">
+                <p>Your cart is empty.</p>
+            </div>
+            <div class="checkout-form">
+                <h3>Shipping Details</h3>
+                <p style="font-size: 0.8rem; color: #666; margin-bottom: 15px;">
+                    This order will be sent directly to Shrusti Chemical Products. We will contact you to confirm payment and delivery.
+                </p>
+                <form id="orderForm" action="https://formspree.io/f/maqgqbpj" method="POST">
+                    <div class="form-group">
+                        <label>Full Name</label>
+                        <input type="text" name="name" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="tel" name="phone" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Business/Company Name</label>
+                        <input type="text" name="company" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Delivery Address</label>
+                        <textarea name="address" rows="3" required></textarea>
+                    </div>
+                    <input type="hidden" name="order_details" id="orderDetailsInput">
+                    <button type="submit" class="checkout-btn">Submit Order Request</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>Shrusti Chemical Products</h3>
+                <p>Your trusted partner for industrial cleaning solutions, hygiene products, and chemical supplies.</p>
+            </div>
+            <div class="footer-section contact-info">
+                <h3>Contact Us</h3>
+                <p><strong>Address:</strong> [Insert Your Full Address Here], City, State, Zip</p>
+                <p><strong>Phone:</strong> +123 456 7890 (Insert Real Number)</p>
+                <p><strong>Email:** support@shrustichemical.com</p>
+            </div>
+            <div class="footer-section">
+                <h3>Business Hours</h3>
+                <p>Monday - Saturday: 9:00 AM - 8:00 PM</p>
+                <p>Sunday: Closed</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 2rem; padding-top: 1rem; border-top: 1px solid rgba(255,255,255,0.1)">
+            &copy; 2024 Shrusti Chemical Products. All rights reserved.
+        </div>
+    </footer>
+
+    <script>
+        // Product Database
+        const products = [
+            { id: 1, name: "Wet Mop Round Set", category: "Mops", price: "Contact for Price" },
+            { id: 2, name: "Wait Mop Round", category: "Mops", price: "Contact for Price" },
+            { id: 3, name: "Metal Clip", category: "Mops", price: "Contact for Price" },
+            { id: 4, name: "Dry Mop Set (1/5 Feet) White", category: "Mops", price: "Contact for Price" },
+            { id: 5, name: "Round Wet Mop Set", category: "Mops", price: "Contact for Price" },
+            { id: 6, name: "Dry Mop Set (2 Feet) White", category: "Mops", price: "Contact for Price" },
+            { id: 7, name: "Clip Mop Set", category: "Mops", price: "Contact for Price" },
+            { id: 8, name: "Dry Mop Set (1/5 Feet) Blue", category: "Mops", price: "Contact for Price" },
+            { id: 9, name: "Clip Mop Refil", category: "Mops", price: "Contact for Price" },
+            { id: 10, name: "Dry Mop Set (2 Feet)", category: "Mops", price: "Contact for Price" },
+            
+            { id: 11, name: "Floor Wiper (Plastic)", category: "Brushes", price: "Contact for Price" },
+            { id: 12, name: "1/4 Floor Wiper", category: "Brushes", price: "Contact for Price" },
+            { id: 13, name: "Aluminium Floor Wiper (1.5 Feet)", category: "Brushes", price: "Contact for Price" },
+            { id: 14, name: "Aluminium Floor Wiper (2 Feet)", category: "Brushes", price: "Contact for Price" },
+            { id: 15, name: "Steel Glass Wiper", category: "Brushes", price: "Contact for Price" },
+            { id: 16, name: "Basin Wiper", category: "Brushes", price: "Contact for Price" },
+            { id: 17, name: "Glass Combi", category: "Brushes", price: "Contact for Price" },
+            { id: 18, name: "Glass Washer", category: "Brushes", price: "Contact for Price" },
+            { id: 19, name: "Round Toilet Brush", category: "Brushes", price: "Contact for Price" },
+            { id: 20, name: "Hockey Toilet Brush", category: "Brushes", price: "Contact for Price" },
+            { id: 21, name: "Basin Brush", category: "Brushes", price: "Contact for Price" },
+            { id: 22, name: "T-Brush", category: "Brushes", price: "Contact for Price" },
+            { id: 23, name: "Feather Brush", category: "Brushes", price: "Contact for Price" },
+
+            { id: 24, name: "Chockup Butch", category: "Bathroom", price: "Contact for Price" },
+            { id: 25, name: "Toilet Mask", category: "Bathroom", price: "Contact for Price" },
+            { id: 26, name: "Dettol Handwash", category: "Bathroom", price: "Contact for Price" },
+            { id: 27, name: "Handwash Fem", category: "Bathroom", price: "Contact for Price" },
+            { id: 28, name: "Ordinary Handwash", category: "Bathroom", price: "Contact for Price" },
+            { id: 29, name: "Odonil (50gm)", category: "Bathroom", price: "Contact for Price" },
+            { id: 30, name: "Sani Cubes", category: "Bathroom", price: "Contact for Price" },
+            { id: 31, name: "N. Balls", category: "Bathroom", price: "Contact for Price" },
+            { id: 32, name: "Urine Screen", category: "Bathroom", price: "Contact for Price" },
+            { id: 33, name: "Garbage Bag (19×21)", category: "Bathroom", price: "Contact for Price" },
+            { id: 34, name: "Garbage Bag (29×39)", category: "Bathroom", price: "Contact for Price" },
+            { id: 35, name: "Garbage Bag Orgin (19×21)", category: "Bathroom", price: "Contact for Price" },
+            { id: 36, name: "Garbage Bag Orgin (29×39)", category: "Bathroom", price: "Contact for Price" },
+            { id: 37, name: "Garbage Bag Orgin (30×50)", category: "Bathroom", price: "Contact for Price" },
+            { id: 38, name: "Tissue Roll (50gm)", category: "Bathroom", price: "Contact for Price" },
+            { id: 39, name: "Tissue Roll (100gm)", category: "Bathroom", price: "Contact for Price" },
+            { id: 40, name: "Tissue Roll (150gm)", category: "Bathroom", price: "Contact for Price" },
+            { id: 41, name: "Tissue Roll (200gm)", category: "Bathroom", price: "Contact for Price" },
+            { id: 42, name: "Tissue Napkin", category: "Bathroom", price: "Contact for Price" },
+            { id: 43, name: "C-Fold Napkin", category: "Bathroom", price: "Contact for Price" },
+            { id: 44, name: "M-Fold Napkin", category: "Bathroom", price: "Contact for Price" },
+            { id: 45, name: "Room Freshener", category: "Bathroom", price: "Contact for Price" },
+            { id: 46, name: "Room Freshener Godrej", category: "Bathroom", price: "Contact for Price" },
+            { id: 47, name: "Sunny Phenyl", category: "Bathroom", price: "Contact for Price" },
+            { id: 48, name: "Red Liquid", category: "Bathroom", price: "Contact for Price" },
+
+            { id: 49, name: "Hand Gloves (Brown)", category: "Essential", price: "Contact for Price" },
+            { id: 50, name: "Hand Gloves (Blue)", category: "Essential", price: "Contact for Price" },
+            { id: 51, name: "Hand Gloves (Yellow)", category: "Essential", price: "Contact for Price" },
+            { id: 52, name: "Pantry Gloves", category: "Essential", price: "Contact for Price" },
+            { id: 53, name: "Table Dustbin", category: "Essential", price: "Contact for Price" },
+            { id: 54, name: "Supadi", category: "Essential", price: "Contact for Price" },
+            { id: 55, name: "Caddy Basket", category: "Essential", price: "Contact for Price" },
+            { id: 56, name: "Bucket (18 Ltr)", category: "Essential", price: "Contact for Price" },
+            { id: 57, name: "Bucket (11 Ltr)", category: "Essential", price: "Contact for Price" },
+            { id: 58, name: "Bucket (9 Ltr)", category: "Essential", price: "Contact for Price" },
+            { id: 59, name: "Drum (100 Ltr)", category: "Essential", price: "Contact for Price" },
+            { id: 60, name: "Drum (60 Ltr)", category: "Essential", price: "Contact for Price" },
+
+            { id: 61, name: "Harpic", category: "Special", price: "Contact for Price" },
+            { id: 62, name: "Colin", category: "Special", price: "Contact for Price" },
+            { id: 63, name: "Lizol (1 Ltr)", category: "Special", price: "Contact for Price" },
+            { id: 64, name: "Vim Bar (Big)", category: "Special", price: "Contact for Price" },
+            { id: 65, name: "Odopic Powder", category: "Special", price: "Contact for Price" },
+            { id: 66, name: "Wheel Powder", category: "Special", price: "Contact for Price" },
+            { id: 67, name: "Steel Wool", category: "Special", price: "Contact for Price" },
+            { id: 68, name: "Black Hit", category: "Special", price: "Contact for Price" },
+            { id: 69, name: "Red Hit", category: "Special", price: "Contact for Price" },
+            { id: 70, name: "Hit Gel", category: "Special", price: "Contact for Price" },
+            { id: 71, name: "Drainex Powder", category: "Special", price: "Contact for Price" },
+            { id: 72, name: "Acid", category: "Special", price: "Contact for Price" },
+            { id: 73, name: "Spray Bottle", category: "Special", price: "Contact for Price" },
+            { id: 74, name: "Bleaching Powder", category: "Special", price: "Contact for Price" },
+            { id: 75, name: "Scotch-Brite", category: "Special", price: "Contact for Price" },
+            { id: 76, name: "Silver Polish", category: "Special", price: "Contact for Price" },
+            { id: 77, name: "Dettol Antiseptic Liquid (500 ml)", category: "Special", price: "Contact for Price" },
+            { id: 78, name: "Metal Scrubber", category: "Special", price: "Contact for Price" },
+
+            { id: 79, name: "R/1", category: "Taski", price: "Contact for Price" },
+            { id: 80, name: "R/2", category: "Taski", price: "Contact for Price" },
+            { id: 81, name: "R/3", category: "Taski", price: "Contact for Price" },
+            { id: 82, name: "R/4", category: "Taski", price: "Contact for Price" },
+            { id: 83, name: "R/5", category: "Taski", price: "Contact for Price" },
+            { id: 84, name: "R/6", category: "Taski", price: "Contact for Price" }
+        ];
+
+        const categories = ["All", "Mops", "Brushes", "Bathroom", "Essential", "Special", "Taski"];
+        let cart = [];
+
+        // Initialize
+        function init() {
+            renderCategories();
+            renderProducts("All");
+        }
+
+        function renderCategories() {
+            const nav = document.getElementById('categoryNav');
+            categories.forEach(cat => {
+                const btn = document.createElement('button');
+                btn.className = 'category-btn';
+                btn.textContent = cat;
+                btn.onclick = () => {
+                    document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    renderProducts(cat);
+                };
+                if(cat === "All") btn.classList.add('active');
+                nav.appendChild(btn);
+            });
+        }
+
+        function renderProducts(category) {
+            const grid = document.getElementById('productsGrid');
+            grid.innerHTML = '';
+
+            const filtered = category === "All" ? products : products.filter(p => p.category === category);
+
+            filtered.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <div class="product-image">
+                        <span>Image Placeholder<br>(ID: ${product.id})</span>
+                        <!-- To add image, replace above span with: <img src="path/to/image.jpg" alt="${product.name}"> -->
+                    </div>
+                    <div class="product-info">
+                        <div class="product-title">${product.name}</div>
+                        <div class="product-price">${product.price}</div>
+                        <button class="add-to-cart" onclick="addToCart(${product.id})">Add to Cart</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function addToCart(id) {
+            const product = products.find(p => p.id === id);
+            cart.push(product);
+            updateCartCount();
+            alert(`${product.name} added to cart!`);
+        }
+
+        function updateCartCount() {
+            document.getElementById('cartCount').textContent = cart.length;
+        }
+
+        function openCart() {
+            const modal = document.getElementById('cartModal');
+            const cartItems = document.getElementById('cartItems');
+            modal.style.display = 'flex';
+
+            if (cart.length === 0) {
+                cartItems.innerHTML = '<p>Your cart is empty.</p>';
+                return;
+            }
+
+            cartItems.innerHTML = '';
+            let totalItems = 0;
+            
+            // Group items
+            const groupedCart = {};
+            cart.forEach(item => {
+                if(groupedCart[item.id]) {
+                    groupedCart[item.id].count++;
+                } else {
+                    groupedCart[item.id] = { ...item, count: 1 };
+                }
+            });
+
+            Object.values(groupedCart).forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'cart-item';
+                div.innerHTML = `
+                    <div>
+                        <strong>${item.name}</strong><br>
+                        Quantity: ${item.count}
+                    </div>
+                    <button class="remove-btn" onclick="removeFromCart(${item.id})">Remove</button>
+                `;
+                cartItems.appendChild(div);
+            });
+
+            // Prepare form data
+            const orderSummary = cart.map(item => `${item.name} (1)`).join('\n');
+            document.getElementById('orderDetailsInput').value = `Items Requested:\n${orderSummary}\n\nTotal Items: ${cart.length}`;
+        }
+
+        function removeFromCart(id) {
+            const index = cart.findIndex(item => item.id === id);
+            if (index > -1) {
+                cart.splice(index, 1);
+                updateCartCount();
+                openCart(); // Refresh cart view
+            }
+        }
+
+        function closeCart() {
+            document.getElementById('cartModal').style.display = 'none';
+        }
+
+        // Close modal on outside click
+        window.onclick = function(event) {
+            const modal = document.getElementById('cartModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+        init();
+    </script>
+</body>
+</html>
